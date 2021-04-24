@@ -1,0 +1,61 @@
+.container{
+    background-color: #eeeeee;
+}
+#outlined-basic{
+    background-color: white;
+}
+#outlined-password-input{
+    background-color: white;
+}
+.logo{
+    transform: scale(2.8);
+}
+#button{
+    background-color: #3d5afe;
+    width:300px;
+    height:50px;
+    color: white;
+    font-size: 20px;
+}
+.flex-container{
+    display: flex;
+}
+.item-1{
+    flex:4;
+    display:flex;
+}
+.parent-div{
+    background-color:#fafafa;
+    padding: 50px;
+    border-radius: 9px;
+    box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.div-content{
+    background-color:#eeeeee;
+    padding:50px;
+    margin-top: 40px;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.5), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.outer-div{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 100%;
+   padding-left:200px;
+}
+.chart-div{
+    margin-top: 60px;
+    padding-top: 100px;
+    padding-bottom: 80px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.homepage-container{
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+   margin-top:20px;   
+}
