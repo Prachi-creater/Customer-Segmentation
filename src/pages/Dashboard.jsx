@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -21,7 +21,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import { BrowserRouter as Router, Link, withRouter } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import Chart from "react-google-charts";
+import Chart from "react-apexcharts";
 import '../pages/styles.css'
 
 
@@ -99,7 +99,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Dashboard({ history }) {
+ export default function Dashboard({ history }) {
+
+ 
+
+   
+
+    
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -203,66 +209,8 @@ function Dashboard({ history }) {
                 <Typography paragraph>
                     <div>
                         <div className='chart-div'>
-                            <Chart
-                                width={'600px'}
-                                height={'400px'}
-                                chartType="Scatter"
-                                loader={<div>Loading Chart</div>}
-                                data={[
-                                    ['Student ID', 'Hours Studied', 'Final'],
-                                    [0, 0, 67],
-                                    [1, 1, 88],
-                                    [2, 2, 77],
-                                    [3, 3, 93],
-                                    [4, 4, 85],
-                                    [5, 5, 91],
-                                    [6, 6, 71],
-                                    [7, 7, 78],
-                                    [8, 8, 93],
-                                    [9, 9, 80],
-                                    [10, 10, 82],
-                                    [11, 0, 75],
-                                    [12, 5, 80],
-                                    [13, 3, 90],
-                                    [14, 1, 72],
-                                    [15, 5, 75],
-                                    [16, 6, 68],
-                                    [17, 7, 98],
-                                    [18, 3, 82],
-                                    [19, 9, 94],
-                                    [20, 2, 79],
-                                    [21, 2, 95],
-                                    [22, 2, 86],
-                                    [23, 3, 67],
-                                    [24, 4, 60],
-                                    [25, 2, 80],
-                                    [26, 6, 92],
-                                    [27, 2, 81],
-                                    [28, 8, 79],
-                                    [29, 9, 83],
-                                ]}
-                                options={{
-                                    // Material design options
-                                    chart: {
-                                        title: "Students' Final Grades",
-                                        subtitle: 'based on hours studied',
-                                    },
-                                    width: 800,
-                                    height: 500,
-                                    series: {
-                                        0: { axis: 'hours studied' },
-                                        1: { axis: 'final grade' },
-                                    },
-                                    axes: {
-                                        y: {
-                                            'hours studied': { label: 'Hours Studied' },
-                                            'final grade': { label: 'Final Exam Grade' },
-                                        },
-                                    },
-                                }}
-                                rootProps={{ 'data-testid': '4' }}
-                                legendToggle
-                            />
+                        
+                        <ApexChart></ApexChart>
                         </div> <br></br>
                         <br></br>
 
@@ -282,4 +230,68 @@ function Dashboard({ history }) {
     );
 }
 
-export default withRouter(Dashboard);
+// export default withRouter(Dashboard);
+
+function ApexChart() {
+    const initialState = {
+      series: [
+        {
+          name: "",
+          data: [],
+        },
+        {
+          name: "",
+          data: [],
+        },
+        {
+          name: "",
+          data: [],
+        },
+      ],
+      options: {
+        chart: {
+          id: "Customer Segmenation Scatter Plot",
+          height: 350,
+          type: "scatter",
+          zoom: {
+            enabled: true,
+            type: "xy",
+          },
+        },
+        xaxis: {
+          tickAmount: 10,
+          labels: {
+            formatter: function (val) {
+              return parseFloat(val).toFixed(1);
+            },
+          },
+        },
+        yaxis: {
+          tickAmount: 7,
+        },
+      },
+  
+     
+  }
+  
+  const [state, setstate] = useState(initialState);
+  
+  useEffect(() => {
+      //make axios request and setstate data coming from api
+  
+      
+  }, [])
+  
+  return (
+    <div id="chart">
+      <Chart
+        options={state.options}
+        series={state.series}
+        type="scatter"
+        height={350}
+        width={800}
+      />
+    </div>
+  );
+  }
+  
