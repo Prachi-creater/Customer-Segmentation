@@ -13,7 +13,10 @@ import Container from '@material-ui/core/Container';
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { Link } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+// import {useToasts} from 'react-toast-notifications';
 import './styles.css';
+import axios from 'axios';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,13 +42,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  // const {addToast}=useToasts();
+  const history =useHistory();
 
 
   const schema = yup.object().shape({
     email: yup.string().required("This field is required"),
-    password: yup.string().required("This field is required").min(8, "Password must be atleast 8 character"),
+    password: yup.string().required("This field is required"),
 
-  })
+  }) 
+  
 
   const formik = useFormik(
     {
@@ -56,6 +62,28 @@ export default function SignIn() {
       validationSchema: schema,
       onSubmit: (data) => {
         console.log(data)
+        axios.post("http://127.0.0.1:8000/users/auth/login",data).then((res)=>{
+          console.log(res)
+          if(res.status==200){
+            localStorage.setItem('username',res.data.username)
+            console.log(localStorage.getItem('username'))
+            // addToast("Successfully logged In",{appearance:'success',autoDismiss:true});
+            history.push('/admin/dashboard')
+
+          }
+          else{
+            console.log("Invalid user")
+            history.push('/signin')
+          }
+         
+
+        }
+        ).catch((error)=>{
+          console.log(error)
+          // addToast("Invalid username or password",{appearance:"error",autoDismiss:true})
+        })
+      
+        
       }
     }
   )
@@ -63,6 +91,7 @@ export default function SignIn() {
 
 
   return (
+    
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>

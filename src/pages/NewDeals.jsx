@@ -28,7 +28,8 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useFormik } from 'formik'
-import * as yup from 'yup'
+import * as yup from 'yup';
+import axios from 'axios';
 
 
 const drawerWidth = 240;
@@ -103,6 +104,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NewDeals({ history }) {
+    
+    const category=["Fashion(men)","Mobile & Tablets","Groceries","Books","Fashion(women)"];
+
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
@@ -138,21 +142,30 @@ function NewDeals({ history }) {
       const formik = useFormik(
         {
             initialValues: {
-                dealName:"",
+                deal_name:"",
                 category:"",
-                discountPrice: "",
-                productName:"",
-                originalPrice: "",
+                product_name: "",
+                original_price:"",
+                discount: "",
+                discount_price:"",
                 
             },
             validationSchema: schema,
             onSubmit: (data) => {
                 console.log(data)
+                axios.post("http://127.0.0.1:8000/admin/addDeal",data).then((res)=>{
+                    console.log(res.data)
+                    if(res.status==1){
+                        console.log(" Deal added Successfully")
+                    }
+                }).catch((error)=>{
+                    console.log("Something went wrong")
+                })
+
             }
         }
     )
 
-    const prod=[];
     
 
     return (
@@ -236,61 +249,32 @@ function NewDeals({ history }) {
                                                 id="outlined-basic"
                                                 label="Deal Name"
                                                 style={{ width: 500 ,backgroundColor: 'white'}}
-                                                name="dealName"
-                                                values={formik.values.dealName}
+                                                name="deal_name"
+                                                values={formik.values.deal_name}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                error={(formik.touched.dealName && formik.errors.dealName) ? true : false}
-                                                helperText={(formik.touched.dealName && formik.errors.dealName)? formik.errors.dealName : ""}
+                                                error={(formik.touched.deal_name && formik.errors.deal_name) ? true : false}
+                                                helperText={(formik.touched.deal_name && formik.errors.deal_name)? formik.errors.deal_name : ""}
                                                 variant="outlined"></TextField>
                                         </Grid>
 
                                         <Grid item sm={6}>
-                                            <TextField
-                                                id="outlined-basic"
-                                                label="category"
-                                                style={{ width: 500,backgroundColor: 'white' }}
-                                                name="category"
-                                                values={formik.values.category}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                error={(formik.touched.category && formik.errors.category) ? true : false}
-                                                helperText={(formik.touched.category && formik.errors.category)? formik.errors.category : ""}
-                                                variant="outlined"></TextField>
-                                        </Grid>
-                                    </Grid><br></br>
-
-
-                                    <Grid container spacing={3}>
-                                        <Grid item sm={6}>
-                                            <TextField
-                                                id="outlined-basic"
-                                                label="Discount Price"
-                                                style={{ width: 500,backgroundColor: 'white'}}
-                                                name="discountPrice"
-                                                values={formik.values.discountPrice}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                error={(formik.touched.category && formik.errors.discountPrice) ? true : false}
-                                                helperText={(formik.touched.discountPrice && formik.errors.discountPrice)? formik.errors.discountPrice: ""}
-                                                variant="outlined"></TextField>
-                                        </Grid>
-
-                                        <Grid item sm={6}>
-                                            <FormControl
+                                          
+                                                 <FormControl
                                                 variant="outlined"
                                                 className={classes.formControl}>
-                                                <InputLabel id="demo-simple-select-outlined-label">Product Name</InputLabel>
+                                                <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
                                                 <Select
                                                     labelId="demo-simple-select-outlined-label"
                                                     id="demo-simple-select-outlined"
                                                     // value={age}
                                                     onChange={handleChange}
-                                                    label="Product Name"
+                                                    label="Category"
+                                                    name="category"
                                                     style={{ width: 500, backgroundColor: 'white' }}
                                                 >
                                                  {
-                                                   prod.length>0 ?  prod.map((ele,index)=><MenuItem value={ele} key={index}>{ele}</MenuItem> ) : <MenuItem value=""><em>None</em></MenuItem>
+                                                   category.length>0 ?  category.map((ele,index)=><MenuItem value={ele} key={index}>{ele}</MenuItem> ) : <MenuItem value=""><em>None</em></MenuItem>
                                                    
                                                  }
                                                     {/*  */}
@@ -305,24 +289,66 @@ function NewDeals({ history }) {
                                         <Grid item sm={6}>
                                             <TextField
                                                 id="outlined-basic"
-                                                label="Original Price"
-                                                style={{ width: 500,backgroundColor: 'white' }}
-                                                name="originalPrice"
-                                                values={formik.values.originalPrice}
+                                                label="Product name"
+                                                style={{ width: 500,backgroundColor: 'white'}}
+                                                name="product_name"
+                                                values={formik.values.product_name}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                error={(formik.touched.originalPrice && formik.errors.originalPrice) ? true : false}
-                                                helperText={(formik.touched.originalPrice && formik.errors.originalPrice)? formik.errors.originalPrice : ""}
+                                                error={(formik.touched.category && formik.errors.product_name) ? true : false}
+                                                helperText={(formik.touched.product_namee && formik.errors.product_name)? formik.errors.product_name: ""}
+                                                variant="outlined"></TextField>
+                                        </Grid>
+
+                                        <Grid item sm={6}>
+                                       
+                                                 <TextField
+                                                id="outlined-basic"
+                                                label="Original Price"
+                                                style={{ width: 500,backgroundColor: 'white' }}
+                                                name="original_price"
+                                                values={formik.values.original_price}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={(formik.touched.original_price && formik.errors.original_price) ? true : false}
+                                                helperText={(formik.touched.original_price && formik.errors.original_price)? formik.errors.original_price : ""}
+                                                variant="outlined"></TextField>
+                                        </Grid>
+                                    </Grid><br></br>
+
+
+                                    <Grid container spacing={3}>
+                                        <Grid item sm={6}>
+                                        <TextField
+                                                id="outlined-basic"
+                                                label="Discount"
+                                                style={{ width: 500,backgroundColor: 'white'}}
+                                                name="discount"
+                                                values={formik.values.discount}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={(formik.touched.category && formik.errors.discount) ? true : false}
+                                                helperText={(formik.touched.discount && formik.errors.discount)? formik.errors.discount: ""}
                                                 variant="outlined"></TextField>
                                         </Grid>
                                         <Grid item sm={6}>
-                                            <Button variant="contained" id="button" style={{ backgroundColor: '#10E194', width: 250 }} disableElevation type="submit">Save</Button>
+                                        <TextField
+                                                id="outlined-basic"
+                                                label="Discount Price"
+                                                style={{ width: 500,backgroundColor: 'white'}}
+                                                name="discount_price"
+                                                values={formik.values.discount_price}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={(formik.touched.discount_price && formik.errors.discount_price) ? true : false}
+                                                helperText={(formik.touched.discount_price && formik.errors.discount_price)? formik.errors.discount_price: ""}
+                                                variant="outlined"></TextField>
                                         </Grid>
 
 
                                     </Grid><br></br><br></br>
 
-
+                                    <Button variant="contained" id="button" style={{ backgroundColor: '#10E194', width: 250 }} disableElevation type="submit">Save</Button>
 
 
                                 </form>

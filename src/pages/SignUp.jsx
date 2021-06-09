@@ -10,7 +10,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+// import {useToasts} from 'react-toast-notifications';
+import axios from 'axios';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,26 +40,42 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
     const classes = useStyles();
+    // const {addToast} = useToasts();
+    const history=useHistory();
+    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
     const schema = yup.object().shape({
-        firstName: yup.string().required("This field is required"),
-        lastName: yup.string().required("This field is required"),
+        username: yup.string().required("This field is required"),
+        password: yup.string().required("This field is required").min(6, "Password must be atleast 6 character"),
         email: yup.string().required("This field is required").email("Invalid Email address"),
-        password: yup.string().required("This field is required").min(8, "Password must be atleast 8 character"),
+        phone: yup.string().matches(phoneRegExp, 'Phone number is not valid')
     })
 
 
     const formik = useFormik(
         {
             initialValues: {
-                firstName:"",
-                lastName:"",
+                username:"",
+                password:"",
                 email: "",
-                password: "",
+                phone: "",
             },
             validationSchema: schema,
             onSubmit: (data) => {
-                console.log(data)
+                axios.post('http://127.0.0.1:8000/users/adduser/',data).then((res)=>{
+                    console.log(res.data)
+                    if(res.data.status==1){
+                        console.log("registred succcessfully")
+                        history.push('/signin')
+                        // addToast("Registred succcessfully")
+                    }
+                    else{
+                        console.log("fail to registered")
+                    }
+                }).catch((error)=>{
+                    console.log(error);
+                    console.log("Something went wrong");
+                })
             }
         }
     )
@@ -71,42 +90,38 @@ export default function SignUp() {
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign up
-        </Typography>
+          </Typography>
                 <form className={classes.form} onSubmit={formik.handleSubmit} noValidate>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                    
                             <TextField
                                 variant="outlined"
                                 helperText={(formik.touched.firstName && formik.errors.firstName)? formik.errors.firstName : ""}
                                 fullWidth
-                                id="firstName"
-                                name="firstName"
-                                label="First Name"
-                                values={formik.values.firstName}
+                                id="username"
+                                name="username"
+                                label="Username"
+                                values={formik.values.username}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 error={(formik.touched.firstName && formik.errors.firstName) ? true : false}
         
                                 
                             />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
+                        <br /><br />
+                        <TextField
                                 variant="outlined"
-                                helperText={(formik.touched.lastName && formik.errors.lastName)? formik.errors.lastName : ""}
+                                helperText={(formik.touched.password && formik.errors.password) ? formik.errors.password : ""}
                                 fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                values={formik.values.lastName}
+                                name="password"
+                                values={formik.values.password}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                error={(formik.touched.lastName && formik.errors.lastName) ? true : false}
-                        
-                                
+                                label="Password"
+                                id="password"
+                                error={(formik.touched.password && formik.errors.password) ? true : false}
+                               
                             />
-                        </Grid>
-                        <Grid item xs={12}>
+                        <br /><br />
                             <TextField
                                 variant="outlined"
                                 helperText={(formik.touched.email && formik.errors.email)? formik.errors.email : ""}
@@ -120,23 +135,22 @@ export default function SignUp() {
                                 onBlur={formik.handleBlur}
                                 
                             />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
+                        <br /><br />
+                        <TextField
                                 variant="outlined"
-                                helperText={(formik.touched.password && formik.errors.password) ? formik.errors.password : ""}
+                                helperText={(formik.touched.email && formik.errors.email)? formik.errors.email : ""}
                                 fullWidth
-                                name="password"
-                                values={formik.values.password}
+                                id="phone"
+                                label="Phone Number"
+                                name="phone"
+                                values={formik.values.phone}
                                 onChange={formik.handleChange}
+                                error={(formik.touched.email && formik.errors.phone) ? true : false}
                                 onBlur={formik.handleBlur}
-                                label="Password"
-                                id="password"
-                                error={(formik.touched.password && formik.errors.password) ? true : false}
-                               
+                                
                             />
-                        </Grid>
-                    </Grid>
+                        <br /><br />
+                    
                     <Button
                         type="submit"
                         fullWidth
@@ -145,7 +159,7 @@ export default function SignUp() {
                         className={classes.submit}
                     >
                         Sign Up
-          </Button>
+             </Button>
 
                     <Link to='/Signin'><h4>Already Registered? Signin here</h4></Link>
                 </form>

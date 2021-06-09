@@ -22,6 +22,7 @@ import { BrowserRouter as Router, Link, withRouter } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import '../pages/styles.css'
+import image from '../images/about.jpg';
 
 
 const drawerWidth = 240;
@@ -198,8 +199,14 @@ function Dashboard({ history }) {
             <main className={classes.content}>
                 <Toolbar />
                 <Typography paragraph>
-                    <div>
-                        This is about page
+                    <div className="aboutpage-div">
+                        <div style={{marginRight:20}}>
+                            <img src={image} alt="not found" style={{width:600,height:500}} />
+                        </div>
+                        <div style={{marginLeft:40,width:600}}>
+                            <h1>About us</h1>
+                            <p>What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s when an unknown printer took a galley of type and scrambled it to make a type </p>
+                        </div>
                     </div>
                 </Typography>
 
